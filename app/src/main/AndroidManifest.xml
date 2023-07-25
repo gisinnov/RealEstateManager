@@ -22,6 +22,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC3p7ubjuEe9gMOtyPZvzyUSA5RlRZ0TGI" />
+
+
         <!-- MainActivity is defined as the launcher activity -->
         <activity
             android:name="com.openclassrooms.realestatemanager.MainActivity"

@@ -1,17 +1,21 @@
 package com.openclassrooms.realestatemanager;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.Manifest;
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,17 +24,37 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class AddPropertyActivity extends AppCompatActivity {
     private static final int REQUEST_SELECT_IMAGES = 1;
     private static final int REQUEST_CAPTURE_PHOTO = 2;
+    private static final int REQUEST_LOCATION_PERMISSION = 1001;
+
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
 
     private List<Bitmap> selectedImages;
     private ImageAdapter imageAdapter;
+    private double latitude;
+    private double longitude;
+    private String propertyAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +64,12 @@ public class AddPropertyActivity extends AppCompatActivity {
         selectedImages = new ArrayList<>();
         imageAdapter = new ImageAdapter(selectedImages);
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        requestLocationPermission();
+
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(imageAdapter);
-
 
         Button buttonSave = findViewById(R.id.buttonSave);
         EditText editTextAvailabilityDate = findViewById(R.id.editTextAvailabilityDate);
@@ -98,6 +124,7 @@ public class AddPropertyActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CAPTURE_PHOTO);
             }
         });
+
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,6 +195,77 @@ public class AddPropertyActivity extends AppCompatActivity {
         // Set current address to the property address field
         String currentAddress = Utils.getCurrentAddress(this);
         editTextPropertyAddress.setText(currentAddress);
+    }
+
+
+    // Method to request location permission
+    private void requestLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
+        } else {
+            getLocation();
+        }
+    }
+
+    // Method to get location
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
+                                getAddressFromLocation();
+                            }
+                        }
+                    });
+        } else {
+            showEnableGPSDialog();
+        }
+    }
+
+
+    // Method to use geocoding and get the address from location
+    private void getAddressFromLocation() {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                propertyAddress = address.getAddressLine(0);
+                EditText editTextPropertyAddress = findViewById(R.id.editTextPropertyAddress);
+                editTextPropertyAddress.setText(propertyAddress);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle errors here
+        }
+    }
+
+    // Method to show a dialog to prompt the user to enable GPS
+    private void showEnableGPSDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Veuillez activer le GPS pour obtenir automatiquement l'adresse.")
+                .setCancelable(false)
+                .setPositiveButton("Paramètres", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
