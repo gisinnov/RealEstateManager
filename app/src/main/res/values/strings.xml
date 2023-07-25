@@ -1,0 +1,62 @@
+<resources>
+    <string name="app_name">RealEstateManager</string>
+    <string name="propriete_fragment_label">Propriete</string>
+    <string name="image_view_desc">Description for the image view</string>
+
+
+    <string-array name="ESTATES">
+        <item>House</item>
+        <item>Flat</item>
+        <item>Duplex</item>
+        <item>Penthouse</item>
+    </string-array>
+
+    <string-array name="ROOMS">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5 and +</item>
+    </string-array>
+
+    <string-array name="BEDROOMS">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5 and +</item>
+    </string-array>
+
+    <string-array name="BATHROOMS">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4 and +</item>
+    </string-array>
+
+    <string-array name="AGENT">
+        <item>John Doe</item>
+        <item>Jane Smith</item>
+        <item>Michael Johnson</item>
+        <item>Emily Davis</item>
+        <item>Alexandra Miller</item>
+    </string-array>
+
+    <string-array name="DESCRIPTION">
+        <item>Kitchen</item>
+        <item>Living Room</item>
+        <item>Bedroom</item>
+        <item>Bathroom</item>
+        <item>Garden</item>
+
+    </string-array>
+
+    <string-array name="STATUS">
+        <item>Disponible</item>
+        <item>Vendu</item>
+    </string-array>
+
+</resources>

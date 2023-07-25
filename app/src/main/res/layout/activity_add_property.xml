@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Property Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nom de la propriété"
+            android:textSize="16sp" />
+        <EditText
+            android:id="@+id/editTextPropertyName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Saisir le nom de la propriété" />
+
+        <!-- Add spacing between elements -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <!-- Property Price -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prix de la propriété en dollar"
+            android:textSize="16sp" />
+        <EditText
+            android:id="@+id/editTextPropertyPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="Saisir le prix de la propriété" />
+
+        <!-- Add spacing between elements -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <!-- Availability Date -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date de disponibilité"
+            android:textSize="16sp" />
+        <EditText
+            android:id="@+id/editTextAvailabilityDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:hint="Saisir la date de disponibilité" />
+
+        <!-- Add spacing between elements -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <!-- Estate Details -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Détails de la propriété"
+            android:textSize="18sp"/>
+
+        <!-- Add spacing between elements -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <!-- Property Area -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Surface du bien (en m2)"
+            android:textSize="16sp" />
+        <EditText
+            android:id="@+id/editTextPropertyArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Saisir la surface du bien" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <!-- Nearby Points of Interest -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Points d’intérêts à proximité"
+            android:textSize="16sp" />
+        <CheckBox
+            android:id="@+id/checkboxSchool"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="École" />
+        <CheckBox
+            android:id="@+id/checkboxShops"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Commerces" />
+        <CheckBox
+            android:id="@+id/checkboxPark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Parc" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <!-- Property Address -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adresse du bien"
+            android:textSize="16sp" />
+        <EditText
+            android:id="@+id/editTextPropertyAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Saisir l'adresse du bien" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+
+        <!-- Spinner for estate type -->
+        <Spinner
+            android:id="@+id/spinnerEstateType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Add spacing between elements -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+
+        <!-- Rooms, Bedrooms, Bathrooms -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinnerRooms"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:id="@+id/spinnerBedrooms"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:id="@+id/spinnerBathrooms"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <!-- Add spacing between elements -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+
+        <!-- Agent and Description -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinnerAgent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:id="@+id/spinnerDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <!-- Add spacing between elements -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+
+        <!-- Property Status -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Statut de la propriété"
+            android:textSize="16sp" />
+        <Spinner
+            android:id="@+id/spinnerStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Add spacing between elements -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+
+        <Button
+            android:id="@+id/buttonSelectImages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Images"
+            android:layout_below="@+id/spinnerStatus"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/buttonCapturePhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Capture Photo"
+            android:layout_below="@+id/buttonSelectImages"
+            android:layout_marginTop="16dp" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/image_view_desc"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_image" />
+
+
+        <!-- Save button -->
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enregistrer"
+            android:layout_gravity="center_horizontal" />
+
+        <!-- Add bottom padding to the content -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+
+
+    </LinearLayout>
+</ScrollView>
