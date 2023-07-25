@@ -116,6 +116,15 @@ public class AddPropertyActivity extends AppCompatActivity {
             }
         });
 
+        Button buttonAutoAddress = findViewById(R.id.buttonAutoAddress);
+        buttonAutoAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLocation(); // Appel de la méthode pour récupérer la géolocalisation
+            }
+        });
+
+
         Button buttonCapturePhoto = findViewById(R.id.buttonCapturePhoto);
         buttonCapturePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -231,6 +240,8 @@ public class AddPropertyActivity extends AppCompatActivity {
     }
 
 
+
+
     // Method to use geocoding and get the address from location
     private void getAddressFromLocation() {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -244,9 +255,10 @@ public class AddPropertyActivity extends AppCompatActivity {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            // Handle errors here
+            // Gérer les erreurs ici
         }
     }
+
 
     // Method to show a dialog to prompt the user to enable GPS
     private void showEnableGPSDialog() {

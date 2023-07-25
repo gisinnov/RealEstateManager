@@ -2,36 +2,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewPropertyList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentTop="true">
-
-
-
-        <ImageView
-            android:id="@+id/imageViewProperty"
-            android:layout_width="110dp"
-            android:layout_height="110dp"/>
-
-        <TextView
-            android:id="@+id/textViewPropertyDetails"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:gravity="end"
-            android:textSize="16sp" />
-
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_above="@id/buttonAdd"
+        android:scrollbars="vertical" />
 
     <Button
         android:id="@+id/buttonAdd"
-        android:layout_width="153dp"
-        android:layout_height="62dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
         android:layout_margin="16dp"
         android:text="Ajouter" />
-
 </RelativeLayout>

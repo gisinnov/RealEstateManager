@@ -16,4 +16,17 @@ public class PermissionUtils {
 
         return fineLocationPermissionResult == PackageManager.PERMISSION_GRANTED && coarseLocationPermissionResult == PackageManager.PERMISSION_GRANTED;
     }
+
+    public static boolean didUserGrantPermissions(int[] grantResults) {
+        if (grantResults.length > 0) {
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
 }

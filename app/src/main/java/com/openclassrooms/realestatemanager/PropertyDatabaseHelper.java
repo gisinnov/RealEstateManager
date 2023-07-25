@@ -12,6 +12,8 @@ public class PropertyDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_IMAGE_PATH = "image_path";
     public static final String COLUMN_PROPERTY_ID = "property_id";
 
+    public static final String COLUMN_IMAGE_ID = "image_id";
+
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + PropertyContract.PropertyEntry.TABLE_NAME + " (" +
                     PropertyContract.PropertyEntry._ID + " INTEGER PRIMARY KEY," +
@@ -33,12 +35,11 @@ public class PropertyDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_IMAGES_TABLE =
             "CREATE TABLE " + TABLE_NAME_IMAGES + " (" +
-                    PropertyContract.PropertyEntry._ID + " INTEGER PRIMARY KEY," +
+                    COLUMN_IMAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     COLUMN_IMAGE_PATH + " TEXT," +
                     COLUMN_PROPERTY_ID + " INTEGER," +
                     "FOREIGN KEY(" + COLUMN_PROPERTY_ID + ") REFERENCES " +
                     PropertyContract.PropertyEntry.TABLE_NAME + "(" + PropertyContract.PropertyEntry._ID + "))";
-
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + PropertyContract.PropertyEntry.TABLE_NAME;
 
