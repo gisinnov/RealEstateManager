@@ -3,7 +3,6 @@ package com.openclassrooms.realestatemanager;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ClipData;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,7 +10,6 @@ import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -42,20 +40,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class AddPropertyActivity extends AppCompatActivity {
     private static final int REQUEST_SELECT_IMAGES = 1;
     private static final int REQUEST_CAPTURE_PHOTO = 2;
     private static final int REQUEST_LOCATION_PERMISSION = 1001;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
-
-
     private List<Bitmap> selectedImages;
     private ImageAdapter imageAdapter;
     private double latitude;
     private double longitude;
     private String propertyAddress;
-
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private PropertyDao propertyDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +67,8 @@ public class AddPropertyActivity extends AppCompatActivity {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         requestLocationPermission();
+
+        this.propertyDao = PropertyDatabase.getInstance(this).propertyDao();
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -120,10 +123,9 @@ public class AddPropertyActivity extends AppCompatActivity {
         buttonAutoAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getLocation(); // Appel de la méthode pour récupérer la géolocalisation
+                getLocation();
             }
         });
-
 
         Button buttonCapturePhoto = findViewById(R.id.buttonCapturePhoto);
         buttonCapturePhoto.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +149,11 @@ public class AddPropertyActivity extends AppCompatActivity {
 
                     String propertyAreaString = editTextPropertyArea.getText().toString();
                     String propertyAddress = editTextPropertyAddress.getText().toString();
+                    EditText editTextPropertyTown = findViewById(R.id.editTextPropertyTown);
+                    EditText editTextPostalCode = findViewById(R.id.editTextPostalCode);
 
+                    String propertyTown = editTextPropertyTown.getText().toString();
+                    String postalCode = editTextPostalCode.getText().toString();
                     boolean isSchoolNearby = checkboxSchool.isChecked();
                     boolean areShopsNearby = checkboxShops.isChecked();
                     boolean isParkNearby = checkboxPark.isChecked();
@@ -174,40 +180,27 @@ public class AddPropertyActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra(PropertyContract.PropertyEntry.COLUMN_PROPERTY_NAME, propertyName);
-                    resultIntent.putExtra(PropertyContract.PropertyEntry.COLUMN_PROPERTY_PRICE, propertyPrice);
-                    resultIntent.putExtra(PropertyContract.PropertyEntry.COLUMN_AVAILABILITY_DATE, availabilityDate);
-
-                    resultIntent.putExtra("estateType", estateTypeString);
-                    resultIntent.putExtra("rooms", roomsString);
-                    resultIntent.putExtra("bedrooms", bedroomsString);
-                    resultIntent.putExtra("bathrooms", bathroomsString);
-                    resultIntent.putExtra("agent", agentString);
-                    resultIntent.putExtra("description", descriptionString);
-                    resultIntent.putExtra("status", statusString);
-
-                    resultIntent.putExtra("propertyArea", propertyArea);
-                    resultIntent.putExtra("propertyAddress", propertyAddress);
-                    resultIntent.putExtra("isSchoolNearby", isSchoolNearby);
-                    resultIntent.putExtra("areShopsNearby", areShopsNearby);
-                    resultIntent.putExtra("isParkNearby", isParkNearby);
-
-                    setResult(Activity.RESULT_OK, resultIntent);
-                    finish();
+                    double propertyPriceValue = Double.parseDouble(propertyPriceString);
+                    Property newProperty = new Property(propertyName, propertyPriceValue, availabilityDate, estateTypeString, roomsString, bedroomsString, bathroomsString, agentString, descriptionString, statusString, propertyArea, propertyAddress, isSchoolNearby, areShopsNearby, isParkNearby, propertyTown, postalCode);
+                    compositeDisposable.add(propertyDao.insert(newProperty)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(() -> {
+                                Intent resultIntent = new Intent();
+                                resultIntent.putExtra("NEW_PROPERTY", newProperty);
+                                setResult(Activity.RESULT_OK, resultIntent);
+                                finish();
+                            }));
                 } else {
                     Toast.makeText(AddPropertyActivity.this, "Pas de connexion réseau disponible", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        // Set current address to the property address field
         String currentAddress = Utils.getCurrentAddress(this);
         editTextPropertyAddress.setText(currentAddress);
     }
 
-
-    // Method to request location permission
     private void requestLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -219,7 +212,6 @@ public class AddPropertyActivity extends AppCompatActivity {
         }
     }
 
-    // Method to get location
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -239,10 +231,6 @@ public class AddPropertyActivity extends AppCompatActivity {
         }
     }
 
-
-
-
-    // Method to use geocoding and get the address from location
     private void getAddressFromLocation() {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
@@ -255,12 +243,9 @@ public class AddPropertyActivity extends AppCompatActivity {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            // Gérer les erreurs ici
         }
     }
 
-
-    // Method to show a dialog to prompt the user to enable GPS
     private void showEnableGPSDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Veuillez activer le GPS pour obtenir automatiquement l'adresse.")
@@ -307,10 +292,8 @@ public class AddPropertyActivity extends AppCompatActivity {
         }
     }
 
-
     private void handleSelectedImage(Uri imageUri) {
         try {
-            // Convert the Uri to a Bitmap
             Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
             selectedImages.add(imageBitmap);
             imageAdapter.notifyDataSetChanged();
@@ -322,5 +305,12 @@ public class AddPropertyActivity extends AppCompatActivity {
     private void handleCapturedImage(Bitmap imageBitmap) {
         selectedImages.add(imageBitmap);
         imageAdapter.notifyDataSetChanged();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.dispose();
     }
 }

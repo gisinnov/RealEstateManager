@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder> {
-    private List<PropertyModel> properties;
+    private List<Property> properties;
     private List<Bitmap> images;
     private Context context;
 
-    public PropertyAdapter(Context context, List<PropertyModel> properties, List<Bitmap> images) {
+    public PropertyAdapter(Context context, List<Property> properties, List<Bitmap> images) {
         this.context = context;
         this.properties = properties;
         this.images = images;
@@ -26,17 +26,17 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.Proper
 
     @NonNull
     @Override
-    public PropertyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_property, parent, false);
-        return new PropertyViewHolder(view);
+    public PropertyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_property, parent, false);
+        return new PropertyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PropertyViewHolder holder, int position) {
-        PropertyModel property = properties.get(position);
+        Property property = properties.get(position);
         Bitmap image = images.get(position);
 
-        holder.propertyName.setText(property.getPropertyName());
+        holder.propertyName.setText(property.getPropertyName()); // Utilisation de getPropertyName()
         holder.imageView.setImageBitmap(image);
     }
 
@@ -59,14 +59,10 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.Proper
 
         @Override
         public boolean onLongClick(View v) {
-            // Get the position of the item clicked
             int position = getAdapterPosition();
-            // Check if position is valid
             if (position != RecyclerView.NO_POSITION) {
-                // Remove the property and image from the list
                 properties.remove(position);
                 images.remove(position);
-                // Notify the adapter about the removed item
                 notifyItemRemoved(position);
                 return true;
             }

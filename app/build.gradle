@@ -35,5 +35,20 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+    // Room dependencies
+    def room_version = "2.3.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version" // For Java use annotationProcessor instead of kapt
+
+    // RxJava support for Room
+    implementation "androidx.room:room-rxjava3:$room_version"
+
+// RxJava dependencies
+    def rxjava_version = "3.0.13"
+    implementation "io.reactivex.rxjava3:rxjava:$rxjava_version"
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+
+
+
 
 }
