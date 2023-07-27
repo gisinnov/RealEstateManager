@@ -7,6 +7,11 @@ import android.content.pm.PackageManager;
 import androidx.core.content.ContextCompat;
 
 public class PermissionUtils {
+    // Camera permission constant
+    public static final Integer CAMERA_PERMISSION = 1002;
+
+    public static final String REQUEST_CAMERA_PERMISSION = Manifest.permission.CAMERA;
+
     public static boolean checkLocationPermission(Context context) {
         String fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
         String coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -28,5 +33,4 @@ public class PermissionUtils {
         }
         return false;
     }
-
 }

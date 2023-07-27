@@ -49,6 +49,8 @@ public class AddPropertyActivity extends AppCompatActivity {
     private static final int REQUEST_CAPTURE_PHOTO = 2;
     private static final int REQUEST_LOCATION_PERMISSION = 1001;
 
+    public static final int REQUEST_CAMERA_PERMISSION = 1002;
+
     private FusedLocationProviderClient fusedLocationProviderClient;
     private List<Bitmap> selectedImages;
     private ImageAdapter imageAdapter;
@@ -57,6 +59,19 @@ public class AddPropertyActivity extends AppCompatActivity {
     private String propertyAddress;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private PropertyDao propertyDao;
+
+    private boolean checkCameraPermission() {
+        return ContextCompat.checkSelfPermission(this, PermissionUtils.REQUEST_CAMERA_PERMISSION)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestCameraPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{PermissionUtils.REQUEST_CAMERA_PERMISSION},
+                PermissionUtils.CAMERA_PERMISSION);
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,8 +146,12 @@ public class AddPropertyActivity extends AppCompatActivity {
         buttonCapturePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, REQUEST_CAPTURE_PHOTO);
+                if (checkCameraPermission()) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, REQUEST_CAPTURE_PHOTO);
+                } else {
+                    requestCameraPermission();
+                }
             }
         });
 
